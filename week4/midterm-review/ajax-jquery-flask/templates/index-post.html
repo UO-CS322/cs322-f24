@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Count with AJAX</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<h2>Type something:</h2>
+<input type="text" id="textInput">
+<p id="output"></p>
+
+<script>
+$(document).ready(function() {
+    $('#textInput').on('input', function() {
+        var inputText = $(this).val();
+      
+        $.ajax({
+            type: 'POST',
+            url: '/count',
+            contentType: 'application/json',
+            data: JSON.stringify({ text: inputText }),
+            success: function(response) {
+                $('#output').text('Character count: ' + response.count);
+            },
+            error: function() {
+                $('#output').text('Error processing your request.');
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>
+
