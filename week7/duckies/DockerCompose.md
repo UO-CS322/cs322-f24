@@ -6,24 +6,20 @@ To create a `docker-compose.yml` file that includes both a Flask web application
 
 In your project directory, create a file named `Dockerfile` with the following content:
 
-
 ```Dockerfile
-# Use the official Python image
 FROM python:3.12-slim
 
 # Set the working directory
 WORKDIR /app
 
 # Copy the requirements and application files
-COPY requirements.txt ./
-COPY app.py ./
-COPY templates/ ./templates/
+COPY . /app
 
 # Install required dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Command to run the application
-ENTRYPOINT ["python", "app.py"]
+CMD ["python", "app.py"]
 
 # Expose the application port
 EXPOSE 5005
@@ -32,7 +28,6 @@ EXPOSE 5005
 ### Step 2: Create `requirements.txt`
 
 Create a `requirements.txt` file in the same directory with the following content:
-
 
 ```
 Flask
@@ -65,8 +60,7 @@ services:
 
 ### Step 4: Edit Flask Application to Use Environment Variables
 
-You will need to modify your Flask app to utilize the environment variable `MONGO_URI`. Update your `app.py` file's MongoDB connection line as follows:
-
+To use the docker compose, the Flask app must utilize the environment variable `MONGO_URI` to connect to the database server.
 
 ```python
 import os
@@ -81,14 +75,13 @@ client = MongoClient(mongo_uri)
 
 In your terminal, navigate to your project directory (where the `docker-compose.yml` file is located) and run:
 
-
 ```bash
 docker-compose up --build
 ```
 
 This command will:
 
-1. Build the Flask application image based on the provided Dockerfile.
+1. Build the Flask application image based on the provided `Dockerfile`.
 2. Pull the MongoDB image if it isn't already available.
 3. Create and start both the `web` and `db` services.
 
@@ -98,5 +91,4 @@ If you make changes to your code or the `Dockerfile` you can rebuild with `docke
 
 Once the containers are running, you should be able to access your Flask web application at `http://localhost:5005`.
 
-
-In the above docker compose setup, the `web` service runs the Flask app, which connects to the MongoDB database service (`db`).
+In the above docker compose setup, the `web` service runs the Flask app, which connects to the MongoDB database service `db`. Note that any new duckies you add to the database will be saved even if you terminate docker-compose.

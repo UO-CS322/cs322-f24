@@ -13,9 +13,11 @@ config = configparser.ConfigParser()
 config.read("app.ini")
 
 # Connect to MongoDB
-# client = MongoClient("localhost", 27017)   # when not using docker compose
 mongo_uri = os.environ.get("MONGO_URI", "mongodb://localhost:27017/DuckyCollection")
-client = MongoClient(mongo_uri)
+if mongo_uri:
+    client = MongoClient(mongo_uri)
+else:
+    client = MongoClient("localhost", 27017)
 db = client["duckdb"]
 ducks_collection = db["DuckyCollection"]
 
