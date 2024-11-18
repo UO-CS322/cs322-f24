@@ -23,7 +23,7 @@ COPY templates/ ./templates/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Command to run the application
-CMD ["python", "app.py"]
+ENTRYPOINT ["python", "app.py"]
 
 # Expose the application port
 EXPOSE 5005
@@ -36,14 +36,13 @@ Create a `requirements.txt` file in the same directory with the following conten
 
 ```
 Flask
-Flask-Cors
 pymongo
+selenium
 ```
 
 ### Step 3: Create `docker-compose.yml`
 
 In the same project directory, create a `docker-compose.yml` file with the following content:
-
 
 ```yaml
 version: '3.8'
@@ -75,6 +74,7 @@ import os
 # Connect to MongoDB using the ENV variable
 mongo_uri = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/DuckyCollection')
 client = MongoClient(mongo_uri)
+# client = MongoClient("localhost", 27017)  # old version
 ```
 
 ### Step 5: Build and Run the Containers
@@ -91,6 +91,8 @@ This command will:
 1. Build the Flask application image based on the provided Dockerfile.
 2. Pull the MongoDB image if it isn't already available.
 3. Create and start both the `web` and `db` services.
+
+If you make changes to your code or the `Dockerfile` you can rebuild with `docker-compose build`.
 
 ### Step 6: Access the Web Application
 
