@@ -25,7 +25,7 @@ pip install pymongo
 
 ### Step 3: Create a Database and Collection
 
-In MongoDB, we'll create a database named `DuckyCollection` and a collection named `ducks`.
+In MongoDB, we'll create a database named `duckdb` and a collection named `ducks`.
 
 ### Step 4: Interact with MongoDB Using Python
 
@@ -39,10 +39,10 @@ from pymongo import MongoClient
 client = MongoClient('localhost', 27017)
 
 # Access the database
-db = client['DuckyCollection']
+db = client['duckdb']
 
 # Access the collection
-ducks_collection = db['ducks']
+ducks_collection = db['DuckCollection']
 
 # Function to insert a new rubber duck
 def insert_duck(name, color, size, rarity):
@@ -73,9 +73,9 @@ for duck in all_ducks:
 ### Explanation
 
 * **MongoClient:** Connects to the MongoDB server running locally on the default port.
-* **Database and Collection:** Creates or accesses a database (`DuckyCollection`) and a collection within it (`ducks`).
+* **Database and Collection:** Creates or accesses a database (`duckdb`) and a collection within it (`ducks`).
 * **Insert Operation:** The `insert_duck` function adds a document representing a rubber duck to the collection.
-* **Find Operation:** The `get_all_ducks` function retrieves all documents from the collection.
+* **Find Operation:** The `get_all_ducks` function retrieves all documents from the collection. See more information about `find` at https://www.w3schools.com/python/python_mongodb_find.asp (includes a server that lets you run example pymongo code snippets).
 
 ### Step 5: Run the Script
 
@@ -98,16 +98,16 @@ from pymongo import MongoClient
 # Connect to the local MongoDB instance
 client = MongoClient('localhost', 27017)
 
-# Access (or create) a database named 'DuckyCollection'
-db = client['DuckyCollection']
+# Access (or create) a database named 'duckdb'
+db = client['duckdb']
 ```
 
-Here, DuckyCollection is the database name. It doesn't exist until you perform an operation that writes data to it, but you don't need to explicitly create it beforehand.
+Here, duckdb is the database name. It doesn't exist until you perform an operation that writes data to it, but you don't need to explicitly create it beforehand.
 Access (or Create) a Collection:
 
 ```python
-# Access (or create) a collection named 'ducks'
-ducks_collection = db['ducks']
+# Access (or create) a collection named 'DuckCollection'
+ducks_collection = db['DuckCollection']
 ```
 
 ducks is the collection name. Like with databases, it will be created automatically when you first store a document in it.
@@ -118,4 +118,4 @@ ducks is the collection name. Like with databases, it will be created automatica
 * Automatic Indexing: MongoDB automatically indexes the _id field, which is added to each document by default and serves as a primary key.
 * Persistence: The database and collections will persist as long as there is data within them. If you empty a collection or database (by deleting all its documents), MongoDB may remove these from the disk.
 
-By following these steps, you will have a MongoDB database named `DuckyCollection` and a collection named `ducks` as soon as you insert your first document. There's no separate command necessary to create them explicitly in most usage scenarios.
+By following these steps, you will have a MongoDB database named `duckdb` and a collection named `DuckCollection` as soon as you insert your first document. There's no separate command necessary to create them explicitly in most usage scenarios.
