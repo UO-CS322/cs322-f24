@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rubber Duck Collection</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <h1>Rubber Duck Collection</h1>
+
+    <h2>Add a Duck</h2>
+    <input type="text" id="duckName" placeholder="Duck Name" required />
+    <input type="text" id="duckColor" placeholder="Color" required />
+    <input type="text" id="duckSize" placeholder="Size" required />
+    <input type="text" id="duckRarity" placeholder="Rarity" required />
+    <button id="addDuckButton">Add Duck</button>
+    <div id="addResult"></div>
+
+    <h2>Search for a Duck</h2>
+    <input type="text" id="searchName" placeholder="Duck Name" required />
+    <button id="searchDuckButton">Search Duck</button>
+    <button id="clearSearchResult">Clear Search Result</button>
+    <div id="searchResult"></div>
+
+    <script>
+      // Add a Duck
+      $('#addDuckButton').click(function () {
+        const duck = {
+          name: $('#duckName').val(),
+          color: $('#duckColor').val(),
+          size: $('#duckSize').val(),
+          rarity: $('#duckRarity').val()
+        }
+      
+        $.ajax({
+          url: '/add_duck',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(duck),
+          success: function (response) {
+            $('#addResult').text(`${duck.name} added successfully`)
+      
+            // Clear the input fields upon successful addition
+            $('#duckName').val('')
+            $('#duckColor').val('')
+            $('#duckSize').val('')
+            $('#duckRarity').val('')
+          },
+          error: function () {
+            alert('Error adding duck')
+          }
+        })
+      })
+      
+      // Search for a Duck
+      $('#searchDuckButton').click(function () {
+        const name = $('#searchName').val()
+        $.ajax({
+          url: '/search_duck',
+          type: 'GET',
+          data: { name: name },
+          success: function (jsonDuck) {
+            console.log(jsonDuck)
+            let duck = JSON.parse(jsonDuck)
+            $('#searchResult').text(`Duck found: Name: ${duck.name}, Color: ${duck.color}, Size: ${duck.size}, Rarity: ${duck.rarity}`)
+          },
+          error: function () {
+            $('#searchResult').text('Duck not found.')
+          }
+        })
+      })
+      
+      // Clear Search Result
+      $('#clearSearchResult').click(function () {
+        $('#searchResult').text('')
+      })
+    </script>
+  </body>
+</html>

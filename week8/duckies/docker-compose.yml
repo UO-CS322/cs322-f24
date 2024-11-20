@@ -1,0 +1,15 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5005:5005" 
+    depends_on:
+      - db
+    environment:
+      - MONGO_URI=mongodb://db:27017/DuckyCollection  # Connect to MongoDB service
+
+  db:
+    image: mongo:latest # Use the official MongoDB image
+    ports:
+      - "27017:27017"  # Optional: expose MongoDB port 27017
+
