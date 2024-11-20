@@ -1,0 +1,70 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: c) Frontend to backend interaction (manual, 10)
+      id: c-frontend-to-backend-interaction-manual
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: c) Frontend to backend interaction (manual)
+        setup-command: "./setup.sh"
+        command: echo "not automated; will be graded manually"
+        timeout: 30
+        max-score: 0
+    - name: d) README is updated with a clear specification (manual, 10)
+      id: d-readme-is-updated-with-a-clear-specification-manual
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: d) README is updated with a clear specification (manual)
+        setup-command: ''
+        command: echo "not automated; will be graded manually"
+        timeout: 2
+        max-score: 0
+    - name: a) AJAX in the frontend (static/calc.js)
+      id: a-ajax-in-the-frontend-static-calc-js
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: a) AJAX in the frontend (static/calc.js)
+        setup-command: "./setup.sh"
+        command: ". venv/bin/activate && cd brevets && python -m pytest autograder/test_check_calc_js.py"
+        timeout: 5
+        max-score: 20
+    - name: b) Logic in the backend (acp_times.py)
+      id: b-logic-in-the-backend-acp_times-py
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: b) Logic in the backend (acp_times.py)
+        setup-command: "./setup.sh"
+        command: . venv/bin/activate && bash brevets/autograder/test_acp_times.sh
+        timeout: 15
+        max-score: 30
+    - name: e) You have at least 5 pytests and they all pass
+      id: e-you-have-at-least-5-pytests-and-they-all-pass
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: e) You have at least 5 pytests and they all pass
+        setup-command: "./setup.sh"
+        command: . venv/bin/activate && bash brevets/autograder/test_student_pytests.sh
+        timeout: 30
+        max-score: 30
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        C-FRONTEND-TO-BACKEND-INTERACTION-MANUAL_RESULTS: "${{steps.c-frontend-to-backend-interaction-manual.outputs.result}}"
+        D-README-IS-UPDATED-WITH-A-CLEAR-SPECIFICATION-MANUAL_RESULTS: "${{steps.d-readme-is-updated-with-a-clear-specification-manual.outputs.result}}"
+        A-AJAX-IN-THE-FRONTEND-STATIC-CALC-JS_RESULTS: "${{steps.a-ajax-in-the-frontend-static-calc-js.outputs.result}}"
+        B-LOGIC-IN-THE-BACKEND-ACP_TIMES-PY_RESULTS: "${{steps.b-logic-in-the-backend-acp_times-py.outputs.result}}"
+        E-YOU-HAVE-AT-LEAST-5-PYTESTS-AND-THEY-ALL-PASS_RESULTS: "${{steps.e-you-have-at-least-5-pytests-and-they-all-pass.outputs.result}}"
+      with:
+        runners: c-frontend-to-backend-interaction-manual,d-readme-is-updated-with-a-clear-specification-manual,a-ajax-in-the-frontend-static-calc-js,b-logic-in-the-backend-acp_times-py,e-you-have-at-least-5-pytests-and-they-all-pass
