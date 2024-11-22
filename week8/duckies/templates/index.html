@@ -39,7 +39,8 @@
           contentType: 'application/json',
           data: JSON.stringify(duck),
           success: function (response) {
-            $('#addResult').text(`${duck.name} added successfully`)
+            var duckId = response.id
+            $('#addResult').text(`${duck.name} added successfully (ID: ${duckId})`)
       
             // Clear the input fields upon successful addition
             $('#duckName').val('')
