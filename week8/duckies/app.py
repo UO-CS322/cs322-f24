@@ -1,5 +1,6 @@
 import configparser
 import os
+import random
 
 from bson.json_util import dumps, loads
 from flask import Flask, jsonify, render_template, request
@@ -49,6 +50,18 @@ def search_duck():
         return jsonify(dumps(duck)), 200
     return jsonify({"message": "Duck not found."}), 404
 
+@app.route('/ducks', methods=['GET'])
+def get_all_ducks():
+    # Fetch all duck documents from the collection
+    ducks = list(ducks_collection.find())
+    
+    # Convert ObjectId to string and format documents
+    for i, duck in enumerate(ducks):
+        duck['_id'] = str(duck['_id'])
+        if i == random.randint(0, len(ducks)):
+            duck['color'] = "rainbow"
+        
+    return jsonify(ducks), 200
 
 if __name__ == "__main__":
     # Get the port number from the config
