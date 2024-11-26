@@ -23,6 +23,11 @@
     <button id="clearSearchResult">Clear Search Result</button>
     <div id="searchResult"></div>
 
+    <h2>Display Ducks</h2>
+    <form action="/display" method="POST">
+      <button id="display" type="submit" name="action" action="/display" method="POST" value="display">Display</button>
+    </form>
+
     <script>
       // Add a Duck
       $('#addDuckButton').click(function () {

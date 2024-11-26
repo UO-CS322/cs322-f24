@@ -50,18 +50,15 @@ def search_duck():
         return jsonify(dumps(duck)), 200
     return jsonify({"message": "Duck not found."}), 404
 
-@app.route('/ducks', methods=['GET'])
-def get_all_ducks():
-    # Fetch all duck documents from the collection
+
+@app.route("/display", methods=["POST"])
+def display_ducks():
     ducks = list(ducks_collection.find())
-    
-    # Convert ObjectId to string and format documents
-    for i, duck in enumerate(ducks):
-        duck['_id'] = str(duck['_id'])
-        if i == random.randint(0, len(ducks)):
-            duck['color'] = "rainbow"
-        
-    return jsonify(ducks), 200
+    for duck in ducks:
+        duck["_id"] = str(duck["_id"])
+    app.logger.debug("DB: {}".format(ducks))
+    return render_template("ducks.html", items=ducks)
+
 
 if __name__ == "__main__":
     # Get the port number from the config
