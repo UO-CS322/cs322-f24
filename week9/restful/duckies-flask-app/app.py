@@ -1,9 +1,10 @@
 import configparser
+import csv
+import io
 import os
-import random
 
 from bson.json_util import dumps, loads
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, Response
 from pymongo import MongoClient
 
 
@@ -58,6 +59,28 @@ def display_ducks():
         duck["_id"] = str(duck["_id"])
     app.logger.debug("DB: {}".format(ducks))
     return render_template("ducks.html", items=ducks)
+
+@app.route('/ducks/csv', methods=['GET'])
+def export_ducks_to_csv():
+    app.logger.debug("Exporting ducks to CSV")
+    # Prepare CSV output
+    output = io.StringIO()
+    writer = csv.writer(output)
+    
+    # Write CSV headers
+    writer.writerow(['Name', 'Color', 'Size', 'Rarity'])
+
+    # Fetch all ducks from the database
+    ducks = list(ducks_collection.find())
+    
+    # Write duck data to the CSV
+    for duck in ducks:
+        writer.writerow([duck.get('name'), duck.get('color'), duck.get('size'), duck.get('rarity')])
+
+    # Set the response headers for CSV download
+    response = Response(output.getvalue(), mimetype='text/csv')
+    response.headers["Content-Disposition"] = "attachment; filename=ducks.csv"
+    return response
 
 
 if __name__ == "__main__":

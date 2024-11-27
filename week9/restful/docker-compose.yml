@@ -1,15 +1,26 @@
 services:
-  web:
-    build: .
+  mongo:
+    image: mongo:latest  # Use the official MongoDB image
     ports:
-      - "5005:5005" 
+      - "27017:27017"  # Expose MongoDB on default port
+    volumes:
+      - mongo-data:/data/db  # Persist data
+
+  flask_app:
+    build: ./duckies-flask-app  # Build the Flask app from the Dockerfile
+    volumes:
+      - ./duckies-flask-app:/usr/src/app
+    ports:
+      - "5005:80"  # Host:Container
     depends_on:
-      - db
-    environment:
-      - MONGO_URI=mongodb://db:27017/DuckyCollection  # Connect to MongoDB service
+      - mongo  # Ensure Mongo is running before Flask
 
-  db:
-    image: mongo:latest # Use the official MongoDB image
+  php:
+    image: php:apache  # Use PHP with Apache
+    volumes:
+      - ./client-website:/var/www/html  # Mount your PHP website directory
     ports:
-      - "27017:27017"  # Optional: expose MongoDB port 27017
+      - "8000:80"  # Host:Container
 
+volumes:
+  mongo-data:  # Named volume for MongoDB data storage
