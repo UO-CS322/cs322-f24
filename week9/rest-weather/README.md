@@ -94,13 +94,15 @@ You can run this script, and its main program will perform the operations define
 
 ## A real-world example
 
-Here’s an example script that retrieves the current weather for a specified city:
+Here’s an example script that retrieves the current weather for a specified city. 
+The API documentation is a good example of how to document REST APIs: 
+https://openweathermap.org/current
 
 ```python
 import requests
 
-# Your OpenWeatherMap API key (replace 'your_api_key' with your actual API key)
-API_KEY = 'your_api_key'
+# Your OpenWeatherMap API key (replace with your actual API key)
+API_KEY = '69212516f61c4863e1fbacc7ce393c68'
 BASE_URL = 'http://api.openweathermap.org/data/2.5/weather'
 
 def get_weather(city):
@@ -145,11 +147,23 @@ if __name__ == "__main__":
 ### Explanation:
 * API Key: Replace 'your_api_key' with your actual API key from OpenWeatherMap.
 * GET Request: The get_weather function constructs a GET request to the OpenWeatherMap API, passing the city name and your API key as parameters.
-*Temperature Units: The units parameter specifies the measurement system; you can change from metric (Celsius) to imperial (Fahrenheit) if desired.
-*Error Handling: The program checks if the request was successful (HTTP status code 200). If not, it prints an error message.
-*JSON Parsing: The response JSON is parsed to extract relevant weather information, which is then returned.
+  * Temperature Units: The units parameter specifies the measurement system; you can change from metric (Celsius) to imperial (Fahrenheit) if desired. Note - I couldn't get imperial units, but "standard" does return a different value.
+* Error Handling: The program checks if the request was successful (HTTP status code 200). If not, it prints an error message.
+* JSON Parsing: The response JSON is parsed to extract relevant weather information, which is then returned.
 
 ### Running the Example:
-* Run the script.
-* Input a city name when prompted.
-* The script will then output the current weather information for that city.
+
+```
+$ python weather.py
+Enter city name: Eugene
+Weather in Eugene:
+Temperature: 32.25°C
+Description: scattered clouds
+Humidity: 91%
+Wind Speed: 0.54 m/s
+```
+
+The complete response for Eugene was:
+```json
+{'coord': {'lon': -123.0867, 'lat': 44.0521}, 'weather': [{'id': 802, 'main': 'Clouds', 'description': 'scattered clouds', 'icon': '03n'}], 'base': 'stations', 'main': {'temp': 32.25, 'feels_like': 32.25, 'temp_min': 32.25, 'temp_max': 33.73, 'pressure': 1025, 'humidity': 91, 'sea_level': 1025, 'grnd_level': 1002}, 'visibility': 10000, 'wind': {'speed': 0.54, 'deg': 258, 'gust': 0.74}, 'clouds': {'all': 30}, 'dt': 1732805437, 'sys': {'type': 2, 'id': 2001283, 'country': 'US', 'sunrise': 1732807482, 'sunset': 1732840607}, 'timezone': -28800, 'id': 5725846, 'name': 'Eugene', 'cod': 200}
+```
