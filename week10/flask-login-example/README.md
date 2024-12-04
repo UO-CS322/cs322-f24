@@ -8,7 +8,7 @@ This example includes the following:
 
 ### Minimal Flask Application Setup
 
-#### Project Structure
+#### Project **Structure**
 
 ```
 /flask-login-example
@@ -50,6 +50,10 @@ users = {
 class User(UserMixin):
     def __init__(self, username):
         self.username = username
+
+    def get_id(self):
+        return self.username  # Return the username as ID
+
 
 @login_manager.user_loader
 def load_user(username):
@@ -166,3 +170,83 @@ Create a directory named `templates` next to `app.py`. Inside, create two HTML f
 
    - Username: `testuser`
    - Password: `testpassword`
+
+In the minimal Flask application example provided, the username and password are stored in a simple Python dictionary within the `app.py` file. This dictionary serves as a mock user database for demonstration purposes. Here’s how it works:
+
+### User Data Storage
+
+Inside `app.py`, you have the following code snippet:
+
+```python
+# Dummy user data for demonstration (replace this with a proper user authentication system)
+users = {
+    "testuser": {
+        "password": "testpassword"  # In a real app, use hashed passwords
+    }
+}
+```
+
+### Explanation
+
+- **Dictionary Structure**: The `users` dictionary holds usernames as keys and a nested dictionary containing passwords as values. For instance, the username `testuser` has a password of `testpassword`.
+- **In-Memory Storage**: This approach uses in-memory storage, which means that users and their passwords are not persisted across application restarts. The data is only stored in the application’s memory while it is running.
+- **Security Concerns**:
+    - **Not Secure for Production**: Hardcoding usernames and passwords like this is not secure, especially as it exposes password data directly. In a real application, you should never store plain text passwords.
+    - **Use Hashed Passwords**: For real-world applications, it's a best practice to hash passwords using libraries like `bcrypt`, `werkzeug.security`, or others before storing them. This way, even if the database is compromised, passwords remain safe.
+
+### Improving User Storage for Production
+
+If you want to enhance the application and manage users more securely and effectively, consider the following options:
+
+1. **Use a Database**: Store user credentials in a database (like MongoDB, PostgreSQL, MySQL, etc.). This allows persistence and better management of user accounts.
+2. **Password Hashing**: Use libraries to hash passwords before storing them. Here’s a brief example of how to use `werkzeug.security` to hash and check passwords:
+
+   ```python
+   from werkzeug.security import generate_password_hash, check_password_hash
+
+   # Hash a password
+   hashed_password = generate_password_hash('testpassword')
+
+   # Store in users dictionary
+   users = {
+       "testuser": {
+           "password": hashed_password  # Store the hashed password
+       }
+   }
+
+   # To verify during login
+   if username in users and check_password_hash(users[username]['password'], password):
+       # Password is correct, log the user in
+   ```
+
+By implementing these best practices, you'll significantly enhance the security of your application and protect user data effectively.
+
+## Other details
+
+### What is `UserMixin`?
+
+`UserMixin` is a class provided by the Flask-Login extension, which is used to simplify the implementation of user authentication in Flask applications. It provides default implementations for several methods required by Flask-Login, making it easier to manage user sessions and authentication.
+
+### Key Features of `UserMixin`
+
+Here are some of the key attributes and methods that `UserMixin` provides:
+
+1. **`is_authenticated`**: This property returns `True` if the user is authenticated. This is typically used to check whether the user has successfully logged in.
+2. **`is_active`**: This property returns `True` for active users. You can customize this to check if the user account is active or banned.
+3. **`is_anonymous`**: This property returns `True` for anonymous (not logged-in) users. This can be used to differentiate between authenticated users and visitors.
+4. **`get_id()`**: This method should return a unique identifier for the user, typically the user's username or user ID. This is used by Flask-Login to manage user sessions.
+
+### Example of Using `UserMixin`
+
+Here's how you might implement a user class that inherits from `UserMixin`:
+
+```python
+from flask_login import UserMixin
+
+class User(UserMixin):
+    def __init__(self, username):
+        self.username = username
+
+    def get_id(self):
+        return self.username  # Return the username as the unique identifier
+```
