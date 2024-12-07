@@ -248,5 +248,5 @@ class User(UserMixin):
         self.username = username
 
     def get_id(self):
-        return self.username  # Return the username as the unique identifier
+        return self.username  # Return the username as the unique identifierg
 ```
